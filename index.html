@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4438ca">
+  <title>KuisKelas — Kuis langsung untuk kelas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="KuisKelas beranda"><span class="brand-mark">K</span><span>Kuis<span class="brand-light">Kelas</span></span></a>
+    <div class="top-menu" id="topMenu">
+      <button class="top-menu-trigger" id="menuToggle" aria-haspopup="true" aria-expanded="false"><span class="menu-dots">•••</span> Menu</button>
+      <div class="top-dropdown hidden" id="topDropdown"><button data-go="teacher"><span>▣</span> Ruang Dosen</button></div>
+    </div>
+  </header>
+
+  <main id="app" class="shell">
+    <section id="home" class="hero-screen">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="sparkle">✦</span> BELAJAR JADI LEBIH SERU</div>
+        <h1>Kuis kelas yang<br><span>hidup dan interaktif.</span></h1>
+        <p>Masukkan kode dari dosen untuk bergabung ke sesi. Jawab pertanyaan sebelum waktunya habis dan lihat hasil Anda langsung.</p>
+        <div class="hero-points"><span>✓ Tanpa akun</span><span>✓ Timer otomatis</span><span>✓ Nilai langsung</span></div>
+      </div>
+      <div class="entry-grid">
+        <button class="entry-card student-card" data-go="student">
+          <span class="card-icon icon-blue">↗</span><span class="entry-label">UNTUK MAHASISWA</span>
+          <strong>Ikut kuis</strong><span class="entry-desc">Masukkan kode dari dosen.</span>
+          <span class="entry-arrow">→</span>
+        </button>
+      </div>
+      <div class="hero-footer"><span class="avatar-stack"><i>20</i></span> Hingga 20 mahasiswa dapat bergabung dalam satu sesi</div>
+    </section>
+
+    <section id="teacher" class="workspace hidden">
+      <div class="page-heading"><button class="back-link" data-go="home">← Halaman utama</button><div class="eyebrow">RUANG DOSEN</div><h2>Apa yang ingin Anda lakukan?</h2><p>Buat pertanyaan baru atau buka ruang untuk membagikan kuis kepada mahasiswa.</p></div>
+      <div class="teacher-actions">
+        <button class="teacher-action-card" data-go="editor"><span class="teacher-action-icon violet">✎</span><span class="entry-label">SIAPKAN MATERI</span><strong>Buat kuis</strong><span class="entry-desc">Tulis soal sendiri atau susun draf dari file PowerPoint.</span><span class="entry-arrow">→</span></button>
+        <button id="openSharePage" class="teacher-action-card" data-go="share"><span class="teacher-action-icon blue">↗</span><span class="entry-label">MULAI SESI</span><strong>Bagikan kuis</strong><span class="entry-desc">Pilih kuis yang sudah dibuat, lalu bagikan kode ke mahasiswa.</span><span class="entry-arrow">→</span></button>
+      </div>
+      <div class="teacher-note"><span>◈</span><span>Kuis yang sedang dibuat tersimpan sementara di halaman ini. Unduh file JSON jika ingin menggunakannya lagi nanti.</span></div>
+    </section>
+
+    <section id="editor" class="workspace hidden">
+      <div class="page-heading"><button class="back-link" data-go="teacher">← Menu dosen</button><div class="eyebrow">BUAT KUIS</div><h2>Siapkan pertanyaan</h2><p>Tambahkan soal, pilih jawaban benar, lalu simpan file kuis.</p></div>
+      <div class="teacher-layout">
+        <div class="main-column">
+          <div class="panel">
+            <div class="panel-title"><span class="step-badge">1</span><div><h3>Detail kuis</h3><p>Berikan nama yang mudah dikenali mahasiswa.</p></div></div>
+            <label class="field-label" for="quizTitle">Judul kuis</label>
+            <input id="quizTitle" class="text-input" maxlength="80" value="Kuis Pertemuan" placeholder="Contoh: Kuis Computer Vision — Pertemuan 1">
+            <div class="settings-row"><div><label class="field-label" for="questionSeconds">Waktu per soal</label><span class="field-hint">Hitung mundur otomatis</span></div><select id="questionSeconds" class="select-input"><option value="15">15 detik</option><option value="20">20 detik</option><option value="30" selected>30 detik</option><option value="45">45 detik</option><option value="60">60 detik</option><option value="90">90 detik</option></select></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title"><span class="step-badge">2</span><div><h3>Pertanyaan</h3><p>Empat pilihan jawaban, satu jawaban benar.</p></div><span id="questionCount" class="count-pill">0 soal</span></div>
+            <div class="ppt-import">
+              <div class="ppt-symbol">P</div><div class="ppt-copy"><strong>Mulai dari file PowerPoint</strong><span>Ekstrak isi slide, lalu buat draf pilihan ganda.</span></div>
+              <label class="upload-button" for="pptFile">Pilih PPTX</label><input id="pptFile" type="file" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" hidden>
+            </div>
+            <div id="pptStatus" class="ppt-status hidden"></div>
+            <div id="questionList" class="question-list"></div>
+            <button id="addQuestion" class="add-question">＋ Tambah pertanyaan</button>
+            <div class="editor-actions"><button id="saveQuiz" class="button button-primary">Simpan kuis</button><button id="loadQuiz" class="button button-secondary">Muat file kuis</button><input id="quizFile" type="file" accept=".json,application/json" hidden></div>
+          </div>
+        </div>
+        <aside class="side-column">
+          <div class="panel launch-panel"><div class="launch-art"><span>✦</span><i>?</i><b>✓</b></div><h3>Soal siap?</h3><p>Buka menu dosen untuk membuat sesi dan membagikan kode kuis.</p><div class="launch-facts"><div><b>20</b><span>peserta maks.</span></div><div><b>0</b><span>perlu akun</span></div><div><b>∞</b><span>tanpa database</span></div></div><button class="button button-primary button-wide" data-go="share">Ke halaman bagikan <span>→</span></button><small>Periksa jawaban benar sebelum sesi dimulai.</small></div>
+          <div class="privacy-note"><span>◈</span><div><strong>Hasil tetap privat</strong><p>Nilai tersimpan di browser dosen sampai diunduh.</p></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="share" class="workspace hidden">
+      <div class="page-heading"><button class="back-link" data-go="teacher">← Menu dosen</button><div class="eyebrow">BAGIKAN KUIS</div><h2>Siapkan sesi kelas</h2><p>Pilih kuis yang sudah disiapkan sebelum membagikan kode kepada mahasiswa.</p></div>
+      <div class="share-layout">
+        <div class="panel share-quiz-panel"><div class="panel-title"><span class="step-badge">1</span><div><h3>Kuis untuk sesi ini</h3><p>Pilih kuis yang sedang terbuka atau muat file JSON.</p></div></div><div id="shareQuizSummary" class="share-quiz-summary"></div><button id="shareLoadQuiz" class="button button-secondary">↑ Muat file kuis JSON</button></div>
+        <aside class="panel share-start-panel"><div class="share-start-icon">↗</div><h3>Bagikan ke kelas</h3><p>Setelah sesi dimulai, mahasiswa bergabung menggunakan kode enam karakter.</p><div class="share-info"><span>Peserta maksimal</span><strong>20 mahasiswa</strong></div><button id="startHosting" class="button button-primary button-wide">Buat kode kuis</button><small>Soal akan terlihat setelah sesi dimulai.</small></aside>
+      </div>
+    </section>
+
+    <section id="host" class="workspace hidden">
+      <div class="session-header"><div><div class="eyebrow">SESI KUIS AKTIF</div><h2 id="hostQuizTitle">Kuis</h2></div><button id="endSession" class="button button-danger-outline">Akhiri sesi</button></div>
+      <div class="host-grid">
+        <div class="panel host-question-panel">
+          <div id="lobbyView" class="lobby-view"><div class="lobby-top"><div><span class="status-pill"><i></i> MENUNGGU PESERTA</span><h3>Bagikan kode<br>untuk bergabung</h3><p>Mahasiswa membuka aplikasi dan memilih “Ikut kuis”.</p></div><div class="join-code-wrap"><span>KODE KUIS</span><strong id="roomCode">------</strong><button id="copyCode" class="copy-button">Salin kode</button></div></div><div class="lobby-bottom"><div><span class="people-icon">♙</span><b id="participantCount">0</b><span>mahasiswa bergabung</span></div><div class="participants" id="participantNames"><span class="empty-participant">Peserta akan muncul di sini</span></div><button id="beginQuiz" class="button button-primary" disabled>Mulai kuis <span>→</span></button></div></div>
+          <div id="liveQuestionView" class="live-question-view hidden"><div class="question-toolbar"><span id="hostQuestionNumber" class="status-pill">PERTANYAAN 1</span><span id="hostTimeLeft" class="timer-chip">00:30</span></div><h3 id="hostQuestionText">Pertanyaan</h3><div id="hostChoices" class="host-choices"></div><div class="answer-progress"><div><b id="answerCount">0</b> dari <b id="answerTotal">0</b> menjawab</div><div class="progress-track"><i id="answerProgressFill"></i></div></div></div>
+          <div id="resultsView" class="results-view hidden"><div class="result-confetti">✦</div><span class="eyebrow">SESI SELESAI</span><h3>Hasil kuis sudah siap.</h3><p>Unduh rekap nilai untuk dibagikan kepada mahasiswa.</p><div class="result-stats"><div><b id="resultParticipants">0</b><span>peserta</span></div><div><b id="resultAverage">0</b><span>rata-rata</span></div><div><b id="resultQuestions">0</b><span>pertanyaan</span></div></div><div class="export-actions"><button id="downloadExcel" class="button button-primary">↓ Unduh Excel</button><button id="downloadPdf" class="button button-secondary">▣ Cetak / PDF</button></div><button id="backToEditor" class="text-button">← Kembali ke editor</button></div>
+        </div>
+        <aside class="panel score-panel"><div class="score-title"><div><h3>Papan skor</h3><p>Berubah saat jawaban masuk</p></div><span id="scoreLive" class="live-indicator"><i></i> LIVE</span></div><div id="scoreboard" class="scoreboard"><div class="score-empty"><span>◎</span><p>Skor peserta<br>akan tampil di sini</p></div></div><div class="score-panel-footer"><span>🏆</span> Poin berdasarkan ketepatan dan kecepatan</div></aside>
+      </div>
+      <div class="session-footnote">Sesi berjalan melalui koneksi langsung. Biarkan halaman dosen tetap terbuka sampai kuis selesai.</div>
+    </section>
+
+    <section id="student" class="student-screen hidden">
+      <button class="back-link" data-go="home">← Kembali</button>
+      <div id="studentJoin" class="student-join-card"><div class="join-icon">↗</div><div class="eyebrow">RUANG MAHASISWA</div><h2>Siap ikut kuis?</h2><p>Masukkan kode yang ditampilkan oleh dosen.</p><label class="field-label" for="studentName">Nama Anda</label><input id="studentName" class="text-input" maxlength="40" placeholder="Nama lengkap"><label class="field-label code-label" for="studentCode">Kode kuis</label><input id="studentCode" class="text-input code-input" maxlength="12" placeholder="ABC123" autocomplete="off"><button id="joinQuiz" class="button button-primary button-wide">Bergabung ke kuis <span>→</span></button><div id="joinError" class="error-message hidden"></div></div>
+      <div id="studentWaiting" class="student-join-card student-waiting hidden"><div class="waiting-spinner"></div><div class="eyebrow">ANDA SUDAH TERHUBUNG</div><h2 id="waitingTitle">Menunggu dosen…</h2><p id="waitingMessage">Kuis akan dimulai sebentar lagi.</p><div class="waiting-name"><span class="avatar">A</span><span id="waitingName">Peserta</span><span class="connected-mark">✓</span></div></div>
+      <div id="studentPlay" class="student-play hidden"><div class="student-play-head"><div class="brand-mark">K</div><span id="studentQNum">PERTANYAAN 1 / 5</span><span id="studentTimer" class="timer-chip">00:30</span></div><div class="student-question-card"><div class="progress-track"><i id="studentProgress"></i></div><h2 id="studentQuestionText">Pertanyaan</h2><div id="studentChoices" class="student-choices"></div><div id="studentAnswerFeedback" class="answer-feedback hidden"></div></div><div class="student-score-footer"><span id="studentScoreLive">Skor 0</span><span>Jawab sebelum waktunya habis!</span></div></div>
+      <div id="studentFinished" class="student-join-card student-finished hidden"><div class="finish-medal">🏆</div><div class="eyebrow">KUIS SELESAI</div><h2 id="finishHeading">Kerja bagus!</h2><p id="finishMessage">Nilai Anda telah tercatat di perangkat dosen.</p><div class="final-score"><b id="finalScore">0</b><span>poin</span></div><div class="finish-rank" id="finishRank"></div><p class="finish-note">Minta dosen mengunduh hasil jika Anda membutuhkan salinan nilai.</p></div>
+    </section>
+
+    <section id="printReport" class="print-report hidden"></section>
+  </main>
+  <footer class="site-footer"><span>© KuisKelas</span><span>Dibuat untuk aktivitas belajar yang lebih aktif <b>✦</b></span></footer>
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
